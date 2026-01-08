@@ -85,3 +85,4 @@ class Magazine(LibraryItem):
         print(f"Year: {self.year}")
         print(f"Status: {self.get_status()}")
 
+
