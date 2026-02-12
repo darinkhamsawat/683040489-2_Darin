@@ -143,54 +143,61 @@ class BMICalculator(QWidget):
 
     # Calculate BMI 
     def calculate_bmi(self):
-        try:
-            weight = float(self.weight_input.text())
-            height = float(self.height_input.text())
+     try:
+        weight = float(self.weight_input.text())
+        height = float(self.height_input.text())
 
-            if self.weight_unit.currentText() == "kilograms":
-                height_m = height / 100
-                bmi = weight / (height_m ** 2)
-            else:
-                bmi = (weight / (height ** 2)) * 703
-
-            self.bmi_label.setText(f"{bmi:.2f}")
-
-            # Adult
-            if self.age_combo.currentText() == "Adults 20+":
-                self.child_info.setText("")
-                self.table_widget.show() 
-
-                if bmi < 18.5:
-                    condition = "Thin"
-                elif bmi <= 25:
-                    condition = "Normal"
-                elif bmi <= 30:
-                    condition = "Overweight"
-                else:
-                    condition = "Obese"
-
-                self.condition_label.setText(condition)
-            
-                self.condition_label.setStyleSheet("color: #000000;")
-                self.table_widget.setStyleSheet("color: #000000;")
-
-            # Child
-            else:
-                self.condition_label.setText("")
-                self.table_widget.hide()  
-                self.child_info.setText(
-                    "For child's BMI interpretation, please click one of the following links.:<br>"
-                    "<a href='https://www.nhs.uk/'>BMI graph for BOYS</a> | "
-                    "<a href='https://www.nhs.uk/'>BMI graph for GIRLS</a>"
-                )
-                self.child_info.setStyleSheet("color: #000000;")
-                self.child_info.setFont(QFont("Arial",8))
-
-        except:
+        
+        if weight <= 0 or height <= 0:
             self.bmi_label.setText("Error")
+            self.condition_label.setText("Weight and Height must be > 0")
+            self.child_info.setText("")
+            self.table_widget.hide()
+            return
+
+        
+        if self.weight_unit.currentText() == "kilograms":
+            height_m = height / 100
+            bmi = weight / (height_m ** 2)
+        else:
+            bmi = (weight / (height ** 2)) * 703
+
+        self.bmi_label.setText(f"{bmi:.2f}")
+
+        
+        if self.age_combo.currentText() == "Adults 20+":
+            self.child_info.setText("")
+            self.table_widget.show()
+
+            if bmi < 18.5:
+                condition = "Thin"
+            elif bmi <= 25:
+                condition = "Normal"
+            elif bmi <= 30:
+                condition = "Overweight"
+            else:
+                condition = "Obese"
+
+            self.condition_label.setText(condition)
+            self.condition_label.setStyleSheet("color: #000000;")
+
+        
+        else:
             self.condition_label.setText("")
             self.table_widget.hide()
-            self.child_info.setText("")
+            self.child_info.setText(
+                "For child's BMI interpretation, please click:<br>"
+                "<a href='https://www.nhs.uk/'>BMI graph for BOYS</a> | "
+                "<a href='https://www.nhs.uk/'>BMI graph for GIRLS</a>"
+            )
+            self.child_info.setStyleSheet("color: #000000;")
+
+     except:
+        self.bmi_label.setText("Error")
+        self.condition_label.setText("Please enter valid numbers")
+        self.child_info.setText("")
+        self.table_widget.hide()
+           
 
     def clear_fields(self):
         self.weight_input.clear()
